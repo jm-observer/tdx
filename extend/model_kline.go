@@ -28,6 +28,28 @@ func (this *Kline) TotalValue() protocol.Price {
 
 type Klines []*Kline
 
+// HHV 近n天的最高价,同tdx公式命名
+func (this Klines) HHV(n int) protocol.Price {
+	p := protocol.Price(0)
+	for i := len(this) - n; i < len(this); i++ {
+		if p < this[i].High {
+			p = this[i].High
+		}
+	}
+	return p
+}
+
+// LLV 近n天的最低价,同tdx公式命名
+func (this Klines) LLV(n int) protocol.Price {
+	p := protocol.Price(0)
+	for i := len(this) - n; i < len(this); i++ {
+		if p == 0 || p > this[i].Low {
+			p = this[i].Low
+		}
+	}
+	return p
+}
+
 // MA 均线
 func (ks Klines) MA(n int) []protocol.Price {
 	out := make([]protocol.Price, len(ks))
